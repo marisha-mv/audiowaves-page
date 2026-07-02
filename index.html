@@ -46,7 +46,7 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
-  body { background: var(--mv-purple-bg); color: var(--text-body); font-family: var(--font-sys); font-weight: 500; line-height: 1.55; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+  body { background: var(--mv-purple-bg); color: var(--text-body); font-family: var(--font-sys); font-weight: 500; line-height: 1.55; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   body.sticky-shown { padding-bottom: var(--sticky-h); }
   ::selection { background: var(--mv-gold); color: var(--text-strong); }
   a { color: inherit; }
@@ -256,7 +256,7 @@
   .tour {
     background: linear-gradient(180deg, var(--mv-surface-alt) 0%, var(--mv-purple-bg) 100%);
     position: relative;
-    overflow: hidden;
+    overflow: clip;
   }
   .tour-intro { max-width: var(--max-w); margin: 0 auto; padding: 4rem var(--pad-x) 2rem; text-align: center; }
   @media (min-width: 768px) { .tour-intro { padding: 6rem var(--pad-x) 2rem; } }
@@ -266,22 +266,33 @@
     max-width: var(--max-w);
     margin: 0 auto;
     padding: 1rem var(--pad-x) 4rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    position: relative;
   }
   @media (min-width: 900px) {
-    .tour-inner { grid-template-columns: 1fr 1fr; gap: 4rem; padding: 2rem var(--pad-x) 6rem; }
+    .tour-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; padding: 2rem var(--pad-x) 6rem; align-items: start; }
   }
 
   .tour-phone-wrap {
-    position: relative;
-    max-width: 360px;
+    position: sticky;
+    top: 72px;
+    width: 60%;
+    max-width: 230px;
     margin: 0 auto;
     aspect-ratio: 686 / 1200;
+    z-index: 3;
+  }
+  /* Mobile: full-bleed backdrop so scrolling captions disappear cleanly behind the pinned phone */
+  .tour-phone-wrap::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: -1.25rem; bottom: -1.75rem;
+    left: -50vw; right: -50vw;
+    background: linear-gradient(180deg, var(--mv-surface-alt), var(--mv-purple-bg));
   }
   @media (min-width: 900px) {
-    .tour-phone-wrap { position: sticky; top: 100px; max-width: 380px; align-self: start; }
+    .tour-phone-wrap { top: 100px; width: 100%; max-width: 380px; align-self: start; z-index: auto; }
+    .tour-phone-wrap::before { display: none; }
   }
 
   .tour-phone-frame {
@@ -330,10 +341,12 @@
   .tour-panels {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-bottom: 6vh;
   }
   @media (min-width: 900px) {
-    .tour-panels { gap: 3.5rem; padding-top: 2rem; padding-bottom: 8vh; }
+    .tour-panels { gap: 3.5rem; margin-top: 0; padding-top: 2rem; padding-bottom: 8vh; }
   }
 
   .tour-panel {
@@ -2515,19 +2528,28 @@
     });
   };
 
-  const tourObserver = new IntersectionObserver((entries) => {
-    // Find the entry most centered in the viewport
-    const visible = entries.filter(e => e.isIntersecting)
-      .sort((a, b) => Math.abs(b.intersectionRatio) - Math.abs(a.intersectionRatio));
-    if (visible.length > 0) {
-      const idx = parseInt(visible[0].target.dataset.panel);
-      activateSlide(idx);
-    }
-  }, {
-    threshold: [0.3, 0.5, 0.7],
-    rootMargin: '-30% 0px -30% 0px'
-  });
-  panels.forEach(p => tourObserver.observe(p));
+  // Activate whichever panel sits nearest the "reading focus line":
+  // viewport-center on desktop (phone is beside the text), lower on mobile
+  // (phone is pinned above the text, so the caption being read is below it).
+  let tourActive = -1;
+  const focusLine = () => window.innerHeight * (window.matchMedia('(min-width: 900px)').matches ? 0.45 : 0.72);
+  const updateTour = () => {
+    if (!panels.length) return;
+    const line = focusLine();
+    // Active = the last panel (in document order) whose top has scrolled above
+    // the focus line. Monotonic + even dwell regardless of panel heights.
+    let best = 0;
+    panels.forEach(p => {
+      if (p.getBoundingClientRect().top <= line) best = parseInt(p.dataset.panel);
+    });
+    if (best !== tourActive) { tourActive = best; activateSlide(best); }
+  };
+  let tourTicking = false;
+  window.addEventListener('scroll', () => {
+    if (!tourTicking) { requestAnimationFrame(() => { updateTour(); tourTicking = false; }); tourTicking = true; }
+  }, { passive: true });
+  window.addEventListener('resize', updateTour, { passive: true });
+  updateTour();
 
   // Sticky mobile CTA
   const sticky = document.getElementById('stickyCta');
