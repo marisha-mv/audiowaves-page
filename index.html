@@ -1528,32 +1528,6 @@
   .eve-phone { width: 84%; }
   .eve-phone.back { width: 80%; left: 16%; }
 
-  /* Mixer builder */
-  .mixer-builder { background: var(--mv-surface); border: 1px solid rgba(122, 18, 212, 0.10); border-radius: var(--radius-lg); padding: 1.75rem 1.5rem; margin-top: 3rem; display: grid; gap: 1.75rem; box-shadow: var(--shadow-card); }
-  @media (min-width: 760px) { .mixer-builder { grid-template-columns: 1.25fr 1fr; padding: 2rem; gap: 2.5rem; } }
-  .mix-rows { display: flex; flex-direction: column; gap: 1.25rem; }
-  .mix-row-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mv-purple-deep); margin-bottom: 0.5rem; }
-  .mix-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-  .mix-chip { background: var(--mv-purple-bg); border: 1px solid rgba(122, 18, 212, 0.18); color: var(--mv-purple-deep); padding: 0.5rem 0.95rem; border-radius: var(--radius-pill); font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: var(--font-sys); transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease; }
-  .mix-chip:hover { background: var(--mv-purple-tint); }
-  .mix-chip.sel { background: var(--mv-purple); border-color: var(--mv-purple); color: white; box-shadow: var(--shadow-purple-glow); }
-  .mix-note { font-size: 0.76rem; color: var(--text-quiet); line-height: 1.5; margin-top: 0.25rem; font-weight: 600; }
-  .mix-card { background: linear-gradient(160deg, var(--mv-purple-ink), var(--mv-purple-deep)); border-radius: var(--radius-card); padding: 1.5rem 1.5rem 1.35rem; color: white; display: flex; flex-direction: column; position: relative; overflow: hidden; min-height: 250px; box-shadow: var(--shadow-lg); }
-  .mix-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 82% 0%, rgba(255, 210, 63, 0.22), transparent 60%); pointer-events: none; }
-  .mix-card > * { position: relative; }
-  .mix-card-eyebrow { font-size: 0.62rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mv-gold); margin-bottom: 0.5rem; }
-  .mix-card-title { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.02em; color: white; margin-bottom: 0.2rem; }
-  .mix-card-sub { font-size: 0.78rem; color: rgba(247, 242, 254, 0.6); margin-bottom: 1.1rem; font-weight: 600; }
-  .mix-card-stack { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
-  .mix-card-stack span { font-size: 0.82rem; color: rgba(247, 242, 254, 0.88); display: flex; align-items: center; gap: 0.55rem; font-weight: 600; }
-  .mix-card-stack span::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--mv-gold); flex-shrink: 0; }
-  .mix-play { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--mv-gold); color: var(--text-strong); border: none; padding: 0.7rem 1.3rem; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 900; cursor: pointer; font-family: var(--font-sys); align-self: flex-start; box-shadow: var(--shadow-gold-glow); transition: transform 0.15s; }
-  .mix-play:hover { transform: translateY(-1px); }
-  .mix-play:active { transform: scale(0.97); }
-  .mix-play .listen-eq i { background: var(--mv-purple-deep); }
-  .recipe-card[data-preset] { cursor: pointer; }
-  .recipe-card[data-preset]:hover { border-color: var(--mv-purple); }
-
   a:focus-visible, button:focus-visible { outline: 3px solid var(--mv-gold); outline-offset: 3px; }
 </style>
 </head>
@@ -2379,58 +2353,15 @@
 
       <p class="section-lede">Layer breath rhythms, solfeggio frequencies, ambient environments, and expert guidance. Save it. Return to it. Modify it. This is what personalization looks like when it stops being a marketing word and starts being architecture.</p>
       <div class="recipes">
-        <div class="recipe-card" data-preset="wim,monroe,sadhguru" role="button" tabindex="0"><div class="recipe-id">001</div><div class="recipe-body">Wim Hof breathing <span class="plus">+</span> Monroe soundscape <span class="plus">+</span> Sadhguru voice</div></div>
-        <div class="recipe-card" data-preset="silva,rain,none" role="button" tabindex="0"><div class="recipe-id">002</div><div class="recipe-body">Silva Centering <span class="plus">+</span> rainforest <span class="plus">+</span> no guide</div></div>
-        <div class="recipe-card" data-preset="sigh,528,mckenna" role="button" tabindex="0"><div class="recipe-id">003</div><div class="recipe-body">Physiological sighs <span class="plus">+</span> 528 Hz <span class="plus">+</span> McKenna hypnosis</div></div>
-        <div class="recipe-card" data-preset="box,jazz,none" role="button" tabindex="0"><div class="recipe-id">004</div><div class="recipe-body">Box breathing <span class="plus">+</span> soul jazz <span class="plus">+</span> silent instruction</div></div>
+        <div class="recipe-card"><div class="recipe-id">001</div><div class="recipe-body">Wim Hof breathing <span class="plus">+</span> Monroe soundscape <span class="plus">+</span> Sadhguru voice</div></div>
+        <div class="recipe-card"><div class="recipe-id">002</div><div class="recipe-body">Silva Centering <span class="plus">+</span> rainforest <span class="plus">+</span> no guide</div></div>
+        <div class="recipe-card"><div class="recipe-id">003</div><div class="recipe-body">Physiological sighs <span class="plus">+</span> 528 Hz <span class="plus">+</span> McKenna hypnosis</div></div>
+        <div class="recipe-card"><div class="recipe-id">004</div><div class="recipe-body">Box breathing <span class="plus">+</span> soul jazz <span class="plus">+</span> silent instruction</div></div>
         <div class="recipe-more">→ <span class="num count" data-to="64996" data-sep="1">64,996</span> more combinations available</div>
       </div>
     </div>
   </div>
 
-  <div class="mixer-builder reveal" id="mixerBuilder">
-    <div class="mix-rows">
-      <div>
-        <div class="mix-row-label">Breath</div>
-        <div class="mix-chips">
-          <button class="mix-chip" type="button" data-row="breath" data-val="box">Box 4-4-4</button>
-          <button class="mix-chip" type="button" data-row="breath" data-val="wim">Wim Hof</button>
-          <button class="mix-chip" type="button" data-row="breath" data-val="silva">Silva Centering</button>
-          <button class="mix-chip" type="button" data-row="breath" data-val="sigh">Physiological sighs</button>
-        </div>
-      </div>
-      <div>
-        <div class="mix-row-label">Sound</div>
-        <div class="mix-chips">
-          <button class="mix-chip" type="button" data-row="sound" data-val="528">528 Hz</button>
-          <button class="mix-chip" type="button" data-row="sound" data-val="monroe">Monroe binaural</button>
-          <button class="mix-chip" type="button" data-row="sound" data-val="rain">Rainforest</button>
-          <button class="mix-chip" type="button" data-row="sound" data-val="jazz">Soul jazz</button>
-        </div>
-      </div>
-      <div>
-        <div class="mix-row-label">Guide</div>
-        <div class="mix-chips">
-          <button class="mix-chip" type="button" data-row="voice" data-val="sadhguru">Sadhguru</button>
-          <button class="mix-chip" type="button" data-row="voice" data-val="mckenna">Paul McKenna</button>
-          <button class="mix-chip" type="button" data-row="voice" data-val="peer">Marisa Peer</button>
-          <button class="mix-chip" type="button" data-row="voice" data-val="none">Unguided</button>
-        </div>
-      </div>
-      <p class="mix-note">Tap a recipe above to load it — or build your own. Preview plays a real 30-second sound render.</p>
-    </div>
-    <div class="mix-card">
-      <div class="mix-card-eyebrow">Your stack</div>
-      <div class="mix-card-title" id="mixTitle">Tactical Calm</div>
-      <div class="mix-card-sub" id="mixSub">12 min · Sadhguru</div>
-      <div class="mix-card-stack">
-        <span id="mixL1">Breath · Box 4-4-4</span>
-        <span id="mixL2">Sound · 528 Hz</span>
-        <span id="mixL3">Guide · Sadhguru</span>
-      </div>
-      <button class="mix-play" id="mixPlay" type="button"><span class="mp-ic" aria-hidden="true">▶</span><span class="mp-tx">Preview this stack</span><span class="listen-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
-    </div>
-  </div>
 </section>
 
 <!-- § 06 EVE -->
@@ -3114,56 +3045,6 @@
       rx.addEventListener('click', () => AudioDemo.toggle({ sound: '528' }, 'rx', 15));
       AudioDemo.onState(tag => { rx.textContent = tag === 'rx' ? '■ Stop' : '▶ Begin'; });
     }
-  })();
-
-  // --- Mixer builder
-  (() => {
-    const builder = document.getElementById('mixerBuilder');
-    if (!builder) return;
-    const state = { breath: 'box', sound: '528', voice: 'sadhguru' };
-    const NAMES = {
-      box: 'Box 4-4-4', wim: 'Wim Hof', silva: 'Silva Centering', sigh: 'Physiological sighs',
-      '528': '528 Hz solfeggio', monroe: 'Monroe binaural', rain: 'Rainforest', jazz: 'Soul jazz',
-      sadhguru: 'Sadhguru', mckenna: 'Paul McKenna', peer: 'Marisa Peer', none: 'Unguided'
-    };
-    const TITLES = { box: 'Tactical Calm', wim: 'Inner Fire', silva: 'Deep Centering', sigh: 'Instant Downshift' };
-    const MINS = { box: 12, wim: 18, silva: 15, sigh: 8 };
-    const el = id => document.getElementById(id);
-    const render = () => {
-      builder.querySelectorAll('.mix-chip').forEach(c =>
-        c.classList.toggle('sel', state[c.dataset.row] === c.dataset.val));
-      el('mixTitle').textContent = TITLES[state.breath];
-      el('mixSub').textContent = MINS[state.breath] + ' min · ' + NAMES[state.voice];
-      el('mixL1').textContent = 'Breath · ' + NAMES[state.breath];
-      el('mixL2').textContent = 'Sound · ' + NAMES[state.sound];
-      el('mixL3').textContent = 'Guide · ' + NAMES[state.voice];
-    };
-    builder.addEventListener('click', e => {
-      const c = e.target.closest('.mix-chip');
-      if (!c) return;
-      state[c.dataset.row] = c.dataset.val;
-      render();
-      if (AudioDemo.playing('mix')) { AudioDemo.stop(); AudioDemo.play({ sound: state.sound }, 'mix', 30); }
-    });
-    const playBtn = el('mixPlay');
-    playBtn.addEventListener('click', () => AudioDemo.toggle({ sound: state.sound }, 'mix', 30));
-    AudioDemo.onState(tag => {
-      const on = tag === 'mix';
-      playBtn.classList.toggle('playing', on);
-      playBtn.querySelector('.mp-ic').textContent = on ? '■' : '▶';
-      playBtn.querySelector('.mp-tx').textContent = on ? 'Playing · tap to stop' : 'Preview this stack';
-    });
-    document.querySelectorAll('.recipe-card[data-preset]').forEach(rc => {
-      const load = () => {
-        const [b, s, v] = rc.dataset.preset.split(',');
-        Object.assign(state, { breath: b, sound: s, voice: v });
-        render();
-        builder.scrollIntoView({ behavior: AW_REDUCED ? 'auto' : 'smooth', block: 'center' });
-      };
-      rc.addEventListener('click', load);
-      rc.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); load(); } });
-    });
-    render();
   })();
 
   // --- Featured hypnotherapy: scroll-driven chapters + slow image zoom
