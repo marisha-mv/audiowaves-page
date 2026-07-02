@@ -1440,6 +1440,19 @@
   }
   .hotspot { opacity: 0.25; transition: opacity 0.45s ease; }
   .hotspot.on { opacity: 1; }
+  .hotspot .hs-core { transform-box: fill-box; transform-origin: center; transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .hotspot.on .hs-core { transform: scale(1.3); }
+  .hotspot .ring { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .hotspot.on .ring { animation: ringOut 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+  @keyframes ringOut { 0% { transform: scale(0.5); opacity: 0.9; } 100% { transform: scale(2.7); opacity: 0; } }
+  .hotspot .region { opacity: 0; transition: opacity 0.7s ease; }
+  .hotspot.on .region { opacity: 0.5; }
+  .pw { opacity: 0.12; transition: opacity 0.5s ease; }
+  .pw.lit { opacity: 1; }
+  .pw-dot { opacity: 0; transition: opacity 0.4s ease; }
+  .pw-dot.lit { opacity: 1; }
+  .brain-viz svg { animation: brainBreathe 7s ease-in-out infinite; transform-origin: 52% 50%; }
+  @keyframes brainBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015); } }
   .brain-callout { opacity: 0.55; transition: opacity 0.35s ease, transform 0.2s ease, box-shadow 0.2s ease; }
   .brain-callout.active { opacity: 1; transform: translateX(-3px); box-shadow: var(--shadow-md); }
 
@@ -1702,6 +1715,13 @@
             <feGaussianBlur stdDeviation="2.5" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
+          <clipPath id="brainClip"><use href="#brainMain"/></clipPath>
+          <linearGradient id="scanGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+            <stop offset="0.45" stop-color="#FFE47A" stop-opacity="0.30"/>
+            <stop offset="0.55" stop-color="#FFFFFF" stop-opacity="0.34"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+          </linearGradient>
         </defs>
 
         <!-- Ambient aura -->
@@ -1724,7 +1744,7 @@
 
         <!-- Main cerebrum -->
         <path d="M 95 258 C 88 208, 108 152, 148 114 C 190 78, 244 60, 310 55 C 380 52, 448 68, 492 106 C 528 138, 548 178, 546 228 C 544 278, 522 322, 490 348 C 458 372, 418 386, 372 388 C 328 388, 278 380, 228 364 C 180 348, 142 320, 114 285 C 98 268, 94 264, 95 258 Z"
-              fill="url(#brainFill)" stroke="#1F0344" stroke-width="2.5" stroke-linejoin="round"/>
+              id="brainMain" fill="url(#brainFill)" stroke="#1F0344" stroke-width="2.5" stroke-linejoin="round"/>
 
         <!-- Depth shading -->
         <ellipse cx="132" cy="180" rx="55" ry="82" fill="#8B2CD8" opacity="0.18"/>
@@ -1763,23 +1783,45 @@
           <path d="M 165 314 Q 192 306, 218 314"/>
         </g>
 
+        <!-- MRI SCAN SWEEP -->
+        <g clip-path="url(#brainClip)">
+          <rect class="scan-rect" x="-150" y="30" width="130" height="380" fill="url(#scanGrad)">
+            <animate attributeName="x" values="-150;590;-150" keyTimes="0;0.5;1" dur="9s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+
         <!-- NEURAL PATHWAYS (animated dashes) -->
         <g fill="none" stroke-linecap="round">
-          <path d="M 418 155 Q 372 145, 320 138" stroke="#FFD23F" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.6">
+          <path class="pw" data-link="1,4" d="M 418 155 Q 372 145, 320 138" stroke="#FFD23F" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.6">
             <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="2.5s" repeatCount="indefinite"/>
           </path>
-          <path d="M 320 138 Q 335 200, 342 260" stroke="#9B4BE8" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.6">
+          <circle class="pw-dot" data-link="1,4" r="3.5" fill="#FFD23F" filter="url(#dotGlow)">
+            <animateMotion dur="2.2s" repeatCount="indefinite" path="M 418 155 Q 372 145, 320 138"/>
+          </circle>
+          <path class="pw" data-link="4,2" d="M 320 138 Q 335 200, 342 260" stroke="#9B4BE8" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.6">
             <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="3s" repeatCount="indefinite"/>
           </path>
-          <path d="M 342 260 Q 308 288, 278 312" stroke="#FF4B7A" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.6">
+          <circle class="pw-dot" data-link="4,2" r="3.5" fill="#9B4BE8" filter="url(#dotGlow)">
+            <animateMotion dur="2.6s" repeatCount="indefinite" path="M 320 138 Q 335 200, 342 260"/>
+          </circle>
+          <path class="pw" data-link="2,3" d="M 342 260 Q 308 288, 278 312" stroke="#FF4B7A" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.6">
             <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="2s" repeatCount="indefinite"/>
           </path>
-          <path d="M 342 260 Q 278 250, 218 242" stroke="#FF4B7A" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.55">
+          <circle class="pw-dot" data-link="2,3" r="3.5" fill="#FF4B7A" filter="url(#dotGlow)">
+            <animateMotion dur="1.9s" repeatCount="indefinite" path="M 342 260 Q 308 288, 278 312"/>
+          </circle>
+          <path class="pw" data-link="2,5" d="M 342 260 Q 278 250, 218 242" stroke="#FF4B7A" stroke-width="1.8" stroke-dasharray="2 6" opacity="0.55">
             <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="2.8s" repeatCount="indefinite"/>
           </path>
-          <path d="M 218 242 Q 320 200, 418 155" stroke="#FFD23F" stroke-width="1.5" stroke-dasharray="2 6" opacity="0.45">
+          <circle class="pw-dot" data-link="2,5" r="3.5" fill="#FF4B7A" filter="url(#dotGlow)">
+            <animateMotion dur="2.4s" repeatCount="indefinite" path="M 342 260 Q 278 250, 218 242"/>
+          </circle>
+          <path class="pw" data-link="5,1" d="M 218 242 Q 320 200, 418 155" stroke="#FFD23F" stroke-width="1.5" stroke-dasharray="2 6" opacity="0.45">
             <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="3.2s" repeatCount="indefinite"/>
           </path>
+          <circle class="pw-dot" data-link="5,1" r="3.5" fill="#FFD23F" filter="url(#dotGlow)">
+            <animateMotion dur="2.8s" repeatCount="indefinite" path="M 218 242 Q 320 200, 418 155"/>
+          </circle>
         </g>
 
         <!-- HOTSPOT 1 · Prefrontal cortex (gold) -->
@@ -1791,8 +1833,12 @@
           <circle cx="418" cy="155" r="28" fill="#FFD23F" opacity="0.42">
             <animate attributeName="r" values="24;30;24" dur="2s" repeatCount="indefinite"/>
           </circle>
-          <circle cx="418" cy="155" r="15" fill="#FFD23F" stroke="#E6B800" stroke-width="1.5" filter="url(#dotGlow)"/>
-          <text x="418" y="161" text-anchor="middle" fill="#1F0344" font-weight="900" font-size="14" font-family="system-ui, sans-serif">1</text>
+          <ellipse class="region" cx="440" cy="155" rx="85" ry="62" fill="#FFD23F" filter="url(#softGlow)"/>
+          <circle class="ring" cx="418" cy="155" r="20" fill="none" stroke="#FFD23F" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <g class="hs-core">
+            <circle cx="418" cy="155" r="15" fill="#FFD23F" stroke="#E6B800" stroke-width="1.5" filter="url(#dotGlow)"/>
+            <text x="418" y="161" text-anchor="middle" fill="#1F0344" font-weight="900" font-size="14" font-family="system-ui, sans-serif">1</text>
+          </g>
         </g>
 
         <!-- HOTSPOT 2 · Amygdala (coral) -->
@@ -1804,8 +1850,12 @@
           <circle cx="342" cy="260" r="28" fill="#FF4B7A" opacity="0.42">
             <animate attributeName="r" values="24;30;24" dur="2s" begin="0.6s" repeatCount="indefinite"/>
           </circle>
-          <circle cx="342" cy="260" r="15" fill="#FF4B7A" stroke="#D93060" stroke-width="1.5" filter="url(#dotGlow)"/>
-          <text x="342" y="266" text-anchor="middle" fill="white" font-weight="900" font-size="14" font-family="system-ui, sans-serif">2</text>
+          <ellipse class="region" cx="342" cy="262" rx="58" ry="45" fill="#FF4B7A" filter="url(#softGlow)"/>
+          <circle class="ring" cx="342" cy="260" r="20" fill="none" stroke="#FF4B7A" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <g class="hs-core">
+            <circle cx="342" cy="260" r="15" fill="#FF4B7A" stroke="#D93060" stroke-width="1.5" filter="url(#dotGlow)"/>
+            <text x="342" y="266" text-anchor="middle" fill="white" font-weight="900" font-size="14" font-family="system-ui, sans-serif">2</text>
+          </g>
         </g>
 
         <!-- HOTSPOT 3 · Hippocampus (purple) -->
@@ -1817,8 +1867,12 @@
           <circle cx="278" cy="312" r="28" fill="#9B4BE8" opacity="0.42">
             <animate attributeName="r" values="24;30;24" dur="2s" begin="1.2s" repeatCount="indefinite"/>
           </circle>
-          <circle cx="278" cy="312" r="15" fill="#9B4BE8" stroke="#4A0A80" stroke-width="1.5" filter="url(#dotGlow)"/>
-          <text x="278" y="318" text-anchor="middle" fill="white" font-weight="900" font-size="14" font-family="system-ui, sans-serif">3</text>
+          <ellipse class="region" cx="282" cy="315" rx="68" ry="45" fill="#9B4BE8" filter="url(#softGlow)"/>
+          <circle class="ring" cx="278" cy="312" r="20" fill="none" stroke="#9B4BE8" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <g class="hs-core">
+            <circle cx="278" cy="312" r="15" fill="#9B4BE8" stroke="#4A0A80" stroke-width="1.5" filter="url(#dotGlow)"/>
+            <text x="278" y="318" text-anchor="middle" fill="white" font-weight="900" font-size="14" font-family="system-ui, sans-serif">3</text>
+          </g>
         </g>
 
         <!-- HOTSPOT 4 · DMN (purple) -->
@@ -1830,8 +1884,12 @@
           <circle cx="320" cy="138" r="28" fill="#7A12D4" opacity="0.42">
             <animate attributeName="r" values="24;30;24" dur="2s" begin="1.8s" repeatCount="indefinite"/>
           </circle>
-          <circle cx="320" cy="138" r="15" fill="#7A12D4" stroke="#4A0A80" stroke-width="1.5" filter="url(#dotGlow)"/>
-          <text x="320" y="144" text-anchor="middle" fill="white" font-weight="900" font-size="14" font-family="system-ui, sans-serif">4</text>
+          <ellipse class="region" cx="316" cy="150" rx="98" ry="56" fill="#7A12D4" filter="url(#softGlow)"/>
+          <circle class="ring" cx="320" cy="138" r="20" fill="none" stroke="#7A12D4" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <g class="hs-core">
+            <circle cx="320" cy="138" r="15" fill="#7A12D4" stroke="#4A0A80" stroke-width="1.5" filter="url(#dotGlow)"/>
+            <text x="320" y="144" text-anchor="middle" fill="white" font-weight="900" font-size="14" font-family="system-ui, sans-serif">4</text>
+          </g>
         </g>
 
         <!-- HOTSPOT 5 · Insula (gold) -->
@@ -1843,8 +1901,12 @@
           <circle cx="218" cy="242" r="28" fill="#FFD23F" opacity="0.42">
             <animate attributeName="r" values="24;30;24" dur="2s" begin="2.4s" repeatCount="indefinite"/>
           </circle>
-          <circle cx="218" cy="242" r="15" fill="#FFD23F" stroke="#E6B800" stroke-width="1.5" filter="url(#dotGlow)"/>
-          <text x="218" y="248" text-anchor="middle" fill="#1F0344" font-weight="900" font-size="14" font-family="system-ui, sans-serif">5</text>
+          <ellipse class="region" cx="220" cy="244" rx="62" ry="46" fill="#FFD23F" filter="url(#softGlow)"/>
+          <circle class="ring" cx="218" cy="242" r="20" fill="none" stroke="#FFD23F" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <g class="hs-core">
+            <circle cx="218" cy="242" r="15" fill="#FFD23F" stroke="#E6B800" stroke-width="1.5" filter="url(#dotGlow)"/>
+            <text x="218" y="248" text-anchor="middle" fill="#1F0344" font-weight="900" font-size="14" font-family="system-ui, sans-serif">5</text>
+          </g>
         </g>
 
         <!-- Ambient particles -->
@@ -2770,6 +2832,7 @@
   (() => {
     const callouts = [...document.querySelectorAll('.brain-callout[data-hs]')];
     const hotspots = [...document.querySelectorAll('.hotspot')];
+    const pathways = [...document.querySelectorAll('.pw, .pw-dot')];
     if (!callouts.length || !hotspots.length) return;
     let cur = null;
     const upd = () => {
@@ -2780,6 +2843,7 @@
       cur = best;
       callouts.forEach(c => c.classList.toggle('active', c === best));
       hotspots.forEach(g => g.classList.toggle('on', g.dataset.hs === best.dataset.hs));
+      pathways.forEach(p => p.classList.toggle('lit', p.dataset.link.split(',').includes(best.dataset.hs)));
     };
     window.addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true });
     upd();
